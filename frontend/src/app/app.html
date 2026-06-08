@@ -1,0 +1,291 @@
+<div class="app-container">
+  <!-- Header -->
+  <header class="glass-header">
+    <div class="header-content">
+      <div class="logo">
+        <span class="logo-icon"></span>
+        <h1>ElectroMark</h1>
+      </div>
+      <nav class="main-nav">
+        <a href="#inicio" class="active">Inicio</a>
+        <a href="#catalogo">Catálogo</a>
+      </nav>
+      <div class="header-actions">
+        <button class="icon-btn fav-btn" (click)="toggleFavs()" title="Mis Favoritos">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path
+              d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+            </path>
+          </svg>
+          <span class="cart-badge" style="background-color: var(--secondary-color);" *ngIf="favorites().length > 0">{{
+            favorites().length }}</span>
+        </button>
+        <button class="icon-btn cart-btn" (click)="toggleCart()" title="Ver carrito">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+          <span class="cart-badge" *ngIf="totalCartItems > 0">{{ totalCartItems }}</span>
+        </button>
+
+        <div class="user-profile" *ngIf="currentUser(); else loginBtn">
+          <span class="user-greeting">Hola, {{ currentUser()?.nombre }}</span>
+          <button class="icon-btn logout-btn" (click)="logout()" title="Cerrar sesión">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+          </button>
+        </div>
+        <ng-template #loginBtn>
+          <button class="login-btn" (click)="toggleLogin()">Acceder</button>
+        </ng-template>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section" id="inicio">
+    <div class="hero-content">
+      <span class="badge">Nuevo Lanzamiento</span>
+      <h2 class="hero-title">El Futuro de la Tecnología<br><span class="gradient-text">En Tus Manos</span></h2>
+      <p class="hero-desc">Descubre la nueva línea de dispositivos inteligentes diseñados para potenciar tu día a día.
+      </p>
+      <div class="hero-buttons">
+        <a href="#catalogo" class="btn btn-primary"
+          style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">Comprar
+          Ahora</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="glow-orb"></div>
+      <div class="product-mockup">
+        <img src="https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?q=80&w=2070&auto=format&fit=crop"
+          alt="Premium Smartphone" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content Area -->
+  <main class="main-content" id="catalogo">
+    <div class="section-header">
+      <h3>Catálogo de Productos</h3>
+      <a href="#" class="view-all">Ver todos <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+          viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M5 12h14"></path>
+          <path d="M12 5l7 7-7 7"></path>
+        </svg></a>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error()" class="error-banner">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      </svg>
+      {{ error() }}
+      <span class="mock-data-notice">Mostrando datos de prueba visuales.</span>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading() && !error()" class="loading-state">
+      <div class="spinner"></div>
+      <p>Cargando productos increíbles...</p>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="product-grid" *ngIf="!loading() || error()">
+      <div class="product-card" *ngFor="let producto of productos()">
+        <div class="product-image">
+          <img [src]="getProductImage(producto.id_categoria)" alt="{{ producto.nombre_producto }}">
+
+          <div class="product-actions">
+            <button class="action-btn" title="Agregar a favoritos">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path
+                  d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                </path>
+              </svg>
+            </button>
+          </div>
+          <div class="stock-badge" [class.low-stock]="producto.stock_producto < 30">
+            {{ producto.stock_producto < 30 ? 'Poco stock' : 'En stock' }} </div>
+          </div>
+          <div class="product-info">
+            <span class="product-brand">{{ producto.marca_producto }}</span>
+            <h4 class="product-name">{{ producto.nombre_producto }}</h4>
+            <p class="product-desc">{{ producto.descripcion_producto }}</p>
+            <div class="product-footer">
+              <span class="product-price">${{ producto.precio_producto }}</span>
+              <button class="add-to-cart-btn" (click)="addToCart(producto)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pagination Controls -->
+      <div class="pagination-container" *ngIf="totalPages() > 1 && !loading() && !error()">
+        <button class="page-btn" [disabled]="currentPage() === 1" (click)="loadPage(currentPage() - 1)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+
+        <div class="page-numbers">
+          <button *ngFor="let page of getPagesArray()" class="page-number-btn" [class.active]="currentPage() === page"
+            (click)="loadPage(page)">
+            {{ page }}
+          </button>
+        </div>
+
+        <button class="page-btn" [disabled]="currentPage() === totalPages()" (click)="loadPage(currentPage() + 1)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </div>
+  </main>
+</div>
+
+<!-- Cart Sidebar -->
+<div class="cart-overlay" [class.open]="isCartOpen()" (click)="toggleCart()"></div>
+<div class="cart-sidebar" [class.open]="isCartOpen()">
+  <div class="cart-header">
+    <h3>Tu Arsenal</h3>
+    <button class="close-cart" (click)="toggleCart()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+  </div>
+
+  <div class="cart-items" *ngIf="cartItems().length > 0; else emptyCart">
+    <div class="cart-item" *ngFor="let item of cartItems()">
+      <div class="item-info">
+        <h4>{{ item.nombre_producto }}</h4>
+        <div class="item-details">
+          <span class="item-qty">x{{ item.cantidad }}</span>
+          <span class="item-price">${{ item.precio_producto }}</span>
+        </div>
+      </div>
+      <button class="remove-item" (click)="removeFromCart(item.id_producto)">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 6h18"></path>
+          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <ng-template #emptyCart>
+    <div class="empty-cart-msg">
+      Tu inventario está vacío.
+    </div>
+  </ng-template>
+
+  <div class="cart-footer" *ngIf="cartItems().length > 0">
+    <div class="cart-total">
+      <span>Total:</span>
+      <span>${{ cartTotal.toFixed(2) }}</span>
+    </div>
+    <button class="btn btn-primary checkout-btn">Confirmar Compra</button>
+  </div>
+</div>
+
+<!-- Favorites Sidebar -->
+<div class="cart-overlay" [class.open]="isFavsOpen()" (click)="toggleFavs()"></div>
+<div class="cart-sidebar" [class.open]="isFavsOpen()">
+  <div class="cart-header">
+    <h3>Mis Favoritos</h3>
+    <button class="close-cart" (click)="toggleFavs()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+  </div>
+
+  <div class="cart-items" *ngIf="getFavoriteProducts().length > 0; else emptyFavs">
+    <div class="cart-item" *ngFor="let item of getFavoriteProducts()">
+      <div class="item-info">
+        <h4>{{ item.nombre_producto }}</h4>
+        <div class="item-details">
+          <span class="item-price">${{ item.precio_producto }}</span>
+        </div>
+      </div>
+      <div style="display:flex; gap:0.5rem">
+        <button class="action-btn" (click)="addToCart(item)" title="Agregar al carrito">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </button>
+        <button class="action-btn" [class.is-fav]="isFavorite(item.id_producto)"
+          (click)="toggleFavorite(item.id_producto)" title="Añadir a Favoritos">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+            [attr.fill]="isFavorite(item.id_producto) ? 'var(--secondary-color)' : 'none'"
+            [attr.stroke]="isFavorite(item.id_producto) ? 'var(--secondary-color)' : 'currentColor'" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path
+              d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+            </path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+  <ng-template #emptyFavs>
+    <div class="empty-cart-msg">No tienes productos favoritos.</div>
+  </ng-template>
+</div>
+
+<!-- Login Modal -->
+<div class="login-overlay" [class.open]="isLoginOpen()" (click)="toggleLogin()"></div>
+<div class="login-modal" [class.open]="isLoginOpen()">
+  <div class="login-header">
+    <h3>Iniciar Sesión</h3>
+    <button class="close-login" (click)="toggleLogin()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+  </div>
+  <form class="login-form" (submit)="login($event, emailInput, passInput)">
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" #emailInput value="test@test.com" required>
+    </div>
+    <div class="form-group">
+      <label>Contraseña</label>
+      <input type="password" #passInput value="123456" required>
+    </div>
+    <div class="login-error" *ngIf="loginError()">{{ loginError() }}</div>
+    <button type="submit" class="btn btn-primary login-submit">Acceder al Nexus</button>
+  </form>
+</div>
+
+<router-outlet></router-outlet>

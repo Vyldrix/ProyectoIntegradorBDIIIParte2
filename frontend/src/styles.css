@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap');
+
+:root {
+  /* Gaming Color Palette */
+  --bg-color: #050505;
+  --bg-color-light: #111111;
+  --surface-color: rgba(15, 15, 20, 0.85);
+  --primary-color: #00ff88;
+  --primary-color-dim: rgba(0, 255, 136, 0.15);
+  --secondary-color: #ff0055;
+  --text-main: #ffffff;
+  --text-muted: #8892b0;
+  --danger: #ff2a2a;
+  --danger-bg: rgba(255, 42, 42, 0.15);
+  
+  /* Radii & Shadows */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-full: 9999px;
+  --shadow-glow: 0 0 20px rgba(102, 252, 241, 0.3);
+  --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.3);
+  
+  /* Transitions */
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  font-family: 'Outfit', sans-serif;
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
